@@ -7,7 +7,7 @@ import datetime
 logger = logging.getLogger(__name__)
 
 def ya_notificado_hoy(paciente_id: str) -> bool:
-    """Evita enviar múltiples alertas para el mismo paciente en el día."""
+    """Evita enviar multiples alertas para el mismo paciente en el dia."""
     db = SessionLocal()
     hoy = datetime.date.today()
     existe = db.query(Alerta).filter(
@@ -34,13 +34,13 @@ def enviar_y_registrar(datos: dict, hallazgos: list, texto_cronologico: str):
 
     # Preparar mensaje para ntfy
     mensaje = (
-        f"🚩 ALERTA CENTINELA\n"
-        f"👤 {datos['nombre']}\n"
-        f"🆔 DNI: {datos['dni']}\n"
-        f"🎂 Edad: {datos['edad']}\n"
-        f"📍 {datos['servicio']} - Cama: {datos['cama']}\n"
-        f"📋 Dx: {datos['diagnostico']}\n"
-        f"🔍 Hallazgos: {hallazgos_str}"
+        f"ALERTA CENTINELA\n"
+        f"Nombre: {datos['nombre']}\n"
+        f"DNI: {datos['dni']}\n"
+        f"Edad: {datos['edad']}\n"
+        f"Servicio: {datos['servicio']} - Cama: {datos['cama']}\n"
+        f"Dx: {datos['diagnostico']}\n"
+        f"Hallazgos: {hallazgos_str}"
     )
 
     headers = {
@@ -61,7 +61,7 @@ def enviar_y_registrar(datos: dict, hallazgos: list, texto_cronologico: str):
         )
         enviado = resp.status_code == 200
     except Exception as e:
-        logger.error(f"Error al enviar notificación: {e}")
+        logger.error(f"Error al enviar notificacion: {e}")
 
     # Registrar en base de datos
     db = SessionLocal()
@@ -82,6 +82,6 @@ def enviar_y_registrar(datos: dict, hallazgos: list, texto_cronologico: str):
     db.close()
 
     if enviado:
-        logger.info(f"✅ Alerta enviada: {datos['nombre']}")
+        logger.info(f"Alerta enviada: {datos['nombre']}")
     else:
-        logger.warning(f"❌ No se pudo enviar la alerta de {datos['nombre']} (quedó registrada igual)")
+        logger.warning(f"No se pudo enviar la alerta de {datos['nombre']} (quedo registrada igual)")
