@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Centinela CAICA</title>
+    <meta http-equiv="refresh" content="60"> <!-- se actualiza cada 60 segundos -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f2f5; }
+        h1 { color: #2c3e50; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #2c3e50; color: white; }
+        .btn { padding: 10px 20px; background: #e74c3c; color: white; border: none; cursor: pointer; }
+        .btn:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>🚩 Centinela CAICA - Monitor de Potenciales Donantes</h1>
+    <button class="btn" onclick="escanear()">🔄 Forzar escaneo ahora</button>
+    <h2>Últimas alertas</h2>
+    <table id="tabla-alertas">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Edad</th>
+                <th>Servicio</th>
+                <th>Cama</th>
+                <th>Diagnóstico</th>
+                <th>Hallazgos</th>
+                <th>Enviado</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function cargarAlertas() {
+            const resp = await fetch('/api/alertas');
+            const datos = await resp.json();
+            let html = '';
+            datos.forEach(a => {
+                html += `<tr>
+                    <td>${a.fecha}</td>
+                    <td>${a.nombre}</td>
+                    <td>${a.dni}</td>
+                    <td>${a.edad}</td>
+                    <td>${a.servicio}</td>
+                    <td>${a.cama}</td>
+                    <td>${a.diagnostico}</td>
+                    <td>${a.hallazgos}</td>
+                    <td>${a.enviado ? '✅' : '❌'}</td>
+                </tr>`;
+            });
+            document.querySelector('#tabla-alertas tbody').innerHTML = html || '<tr><td colspan="9">Sin alertas.</td></tr>';
+        }
+
+        async function escanear() {
+            const btn = document.querySelector('.btn');
+            btn.disabled = true;
+            btn.textContent = 'Escaneando...';
+            await fetch('/api/escanear', { method: 'POST' });
+            setTimeout(() => {
+                cargarAlertas();
+                btn.disabled = false;
+                btn.textContent = '🔄 Forzar escaneo ahora';
+            }, 5000);
+        }
+
+        cargarAlertas();
+        setInterval(cargarAlertas, 30000);  // refresca cada 30 seg
+    </script>
+</body>
+</html>

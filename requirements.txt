@@ -1,0 +1,7 @@
+playwright
+requests
+python-dotenv
+flask
+sqlalchemy
+apscheduler
+openai           # solo si usas la parte de IA, si no, puedes omitirla
