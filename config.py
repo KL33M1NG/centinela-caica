@@ -16,10 +16,10 @@ NTFY_TOKEN = os.getenv("NTFY_TOKEN")
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 USAR_IA = bool(OPENAI_KEY)
 
-# Headless para Playwright (True en producción, False si querés ver el navegador)
+# Headless para Playwright (True en produccion, False si queres ver el navegador)
 HEADLESS = True
 
-# Servicios y áreas a monitorear (igual que en tu script original)
+# Servicios y areas a monitorizar
 SERVICIOS = [
     ("69", ["106"], "UTI I"),
     ("99", ["138"], "UTI II"),
