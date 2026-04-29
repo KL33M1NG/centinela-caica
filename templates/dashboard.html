@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Centinela CAICA</title>
-    <meta http-equiv="refresh" content="60"> <!-- se actualiza cada 60 segundos -->
+    <meta http-equiv="refresh" content="60">
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background: #f0f2f5; }
         h1 { color: #2c3e50; }
@@ -15,9 +15,9 @@
     </style>
 </head>
 <body>
-    <h1>🚩 Centinela CAICA - Monitor de Potenciales Donantes</h1>
-    <button class="btn" onclick="escanear()">🔄 Forzar escaneo ahora</button>
-    <h2>Últimas alertas</h2>
+    <h1>Centinela CAICA - Monitor de Potenciales Donantes</h1>
+    <button class="btn" onclick="escanear()">Forzar escaneo ahora</button>
+    <h2>Ultimas alertas</h2>
     <table id="tabla-alertas">
         <thead>
             <tr>
@@ -27,7 +27,7 @@
                 <th>Edad</th>
                 <th>Servicio</th>
                 <th>Cama</th>
-                <th>Diagnóstico</th>
+                <th>Diagnostico</th>
                 <th>Hallazgos</th>
                 <th>Enviado</th>
             </tr>
@@ -50,7 +50,7 @@
                     <td>${a.cama}</td>
                     <td>${a.diagnostico}</td>
                     <td>${a.hallazgos}</td>
-                    <td>${a.enviado ? '✅' : '❌'}</td>
+                    <td>${a.enviado ? 'Si' : 'No'}</td>
                 </tr>`;
             });
             document.querySelector('#tabla-alertas tbody').innerHTML = html || '<tr><td colspan="9">Sin alertas.</td></tr>';
@@ -64,12 +64,12 @@
             setTimeout(() => {
                 cargarAlertas();
                 btn.disabled = false;
-                btn.textContent = '🔄 Forzar escaneo ahora';
+                btn.textContent = 'Forzar escaneo ahora';
             }, 5000);
         }
 
         cargarAlertas();
-        setInterval(cargarAlertas, 30000);  // refresca cada 30 seg
+        setInterval(cargarAlertas, 30000);
     </script>
 </body>
 </html>
