@@ -1,16 +1,23 @@
-from flask import Flask, render_template, jsonify, request
+import sys
+import io
 import threading
 import asyncio
 import logging
+from flask import Flask, render_template, jsonify, request
 from modelos import SessionLocal, Alerta
 from scraper import ejecutar_ronda
+from config import SERVICIOS
+
+# Corregir encoding para Windows
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 # Configurar logging general
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     handlers=[
-        logging.FileHandler("centinela.log"),
+        logging.FileHandler("centinela.log", encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
@@ -43,11 +50,11 @@ def api_alertas():
 
 @app.route('/api/estado')
 def api_estado():
-    """Devuelve datos simples para saber si el sistema está vivo."""
+    """Devuelve datos simples para saber si el sistema esta vivo."""
     return jsonify({
         "status": "activo",
         "servicios": len(SERVICIOS),
-        "ultima_ronda": "ver log"   # podríamos guardar timestamp en BD
+        "ultima_ronda": "ver log"
     })
 
 @app.route('/api/escanear', methods=['POST'])
