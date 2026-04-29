@@ -13,17 +13,17 @@ async def login(page):
     await page.goto(f"{SIPROD_BASE}/login/Home/Welcome")
     try:
         await page.click("button.auth-btn.vgs-btn")
-        await page.fill('#Username', SIPROD_USER)
-        await page.fill('#Password', SIPROD_PASS)
+        await page.fill('#Username', value=SIPROD_USER)
+        await page.fill('#Password', value=SIPROD_PASS)
         await page.click('button[value="login"]')
         await page.wait_for_load_state("networkidle", timeout=30000)
         logger.info("Login exitoso")
     except Exception as e:
-        logger.error(f"Fallo en login automático: {e}. Intentando acceso directo...")
+        logger.error(f"Fallo en login automatico: {e}. Intentando acceso directo...")
         await page.goto(f"{SIPROD_BASE}/PROD_MVC/InternacionAtencionMedica/Index")
 
 async def obtener_ids_pacientes(page, servicio_id, area_id):
-    """Obtiene los IDs de pacientes internados en un servicio/área."""
+    """Obtiene los IDs de pacientes internados en un servicio/area."""
     await page.goto(f"{SIPROD_BASE}/PROD_MVC/InternacionAtencionMedica/Index")
     await page.select_option("#ServicioId", servicio_id)
     await page.wait_for_timeout(3000)
@@ -38,7 +38,7 @@ async def obtener_ids_pacientes(page, servicio_id, area_id):
     return ids
 
 async def extraer_datos_paciente(page, id_p, zona_nombre):
-    """Va al resumen y cronológico de un paciente; devuelve datos y texto."""
+    """Va al resumen y cronologico de un paciente; devuelve datos y texto."""
     try:
         await page.goto(f"{SIPROD_BASE}/PROD_MVC/ResumenPaciente/Index/{id_p}", timeout=60000)
         await page.wait_for_selector("#HeaderHc", timeout=15000)
@@ -65,8 +65,8 @@ async def extraer_datos_paciente(page, id_p, zona_nombre):
             "diagnostico": "NO DETECTADO"
         }
 
-        # Ir al cronológico
-        btn = page.locator("a", has_text="Cronológico de HC")
+        # Ir al cronologico
+        btn = page.locator("a", has_text="Cronologico de HC")
         texto_completo = ""
         if await btn.count() > 0:
             await btn.click()
@@ -85,7 +85,7 @@ async def extraer_datos_paciente(page, id_p, zona_nombre):
 
 async def ejecutar_ronda():
     """Realiza una ronda completa de monitoreo."""
-    logger.info("🔄 Iniciando ronda de monitoreo...")
+    logger.info("Iniciando ronda de monitoreo...")
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=HEADLESS)
         context = await browser.new_context()
@@ -97,7 +97,7 @@ async def ejecutar_ronda():
             for a_id in areas:
                 try:
                     ids = await obtener_ids_pacientes(page, s_id, a_id)
-                    logger.info(f"📍 {zona} (área {a_id}) → {len(ids)} pacientes")
+                    logger.info(f"Zona {zona} (area {a_id}) -> {len(ids)} pacientes")
                     for pid in ids:
                         datos, texto = await extraer_datos_paciente(page, pid, zona)
                         if datos and texto:
@@ -105,9 +105,9 @@ async def ejecutar_ronda():
                             datos["diagnostico"] = dx
                             if hallazgos:
                                 enviar_y_registrar(datos, hallazgos, texto)
-                            logger.info(f"   ✓ {datos['nombre']} | {dx} | Hallazgos: {len(hallazgos)}")
+                            logger.info(f"   OK {datos['nombre']} | {dx} | Hallazgos: {len(hallazgos)}")
                 except Exception as e:
                     logger.error(f"Error en sector {zona}: {e}")
 
         await browser.close()
-    logger.info("✅ Ronda finalizada.")
+    logger.info("Ronda finalizada.")
