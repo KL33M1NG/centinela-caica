@@ -3,23 +3,23 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Criterios de búsqueda (los tuyos)
+# Criterios de busqueda
 CRITERIOS = {
     "Potencial Donante (CAICA)": r"(caica|incucai|muerte encefalica|tallo|procuracion|en mantenimiento|ablacion|posible donante)",
-    "Deterioro Neurológico": r"(glasgow [3-8]|gcs [3-8]|arreactiva|midriaticas|anisocoricas|descerebracion|decorticacion|hic|pic elevada|edema cerebral)",
+    "Deterioro Neurologico": r"(glasgow [3-8]|gcs [3-8]|arreactiva|midriaticas|anisocoricas|descerebracion|decorticacion|hic|pic elevada|edema cerebral)",
     "Soporte Vital / ARM": r"(arm|tet|iot|intubado|traqueo|ventilacion mec|test de apnea)",
-    "Neurocrítico": r"(tec grave|hsd|hsa|hematoma subdural|stroke|e_v_c|politraum)"
+    "Neurocritico": r"(tec grave|hsd|hsa|hematoma subdural|stroke|e_v_c|politraum)"
 }
 
 def limpiar_diagnostico(texto_sucio: str) -> str:
-    """Extrae el diagnóstico principal del texto de una evolución."""
-    match = re.search(r'(?:dx|diagnóstico|diagnostico|imp\.? dx|motivo de consulta)\s*[:|-]\s*(.+)', texto_sucio, re.IGNORECASE)
+    """Extrae el diagnostico principal del texto de una evolucion."""
+    match = re.search(r'(?:dx|diagnostico|diagnostico|imp\.? dx|motivo de consulta)\s*[:|-]\s*(.+)', texto_sucio, re.IGNORECASE)
     if not match:
         return "NO DETECTADO"
 
     dx = match.group(1).strip()
 
-    # Palabras que indican final del diagnóstico
+    # Palabras que indican final del diagnostico
     palabras_corte = [
         "CONDUCTA", "PLAN", "SOLICITO", "INDICO", "TRATAMIENTO", "TTO",
         "EVOLUCION", "EXAMEN", "ESTUDIO", "LABORATORIO", "COMIENZO", "PROCEDO"
@@ -48,8 +48,5 @@ def analizar_texto(texto_completo: str):
             hallazgos.append(categoria)
 
     diagnostico = limpiar_diagnostico(texto_completo)
-
-    # Si se configuró IA, podríamos llamarla aquí (queda pendiente)
-    # if USAR_IA: ...
 
     return list(set(hallazgos)), diagnostico
