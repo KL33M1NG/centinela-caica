@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 scheduler = BackgroundScheduler()
 
 def wrapper_ejecutar_ronda():
-    """Wrapper para ejecutar la ronda asíncrona desde un job síncrono."""
+    """Wrapper para ejecutar la ronda asincrona desde un job sincrono."""
     try:
         asyncio.run(ejecutar_ronda())
     except Exception as e:
